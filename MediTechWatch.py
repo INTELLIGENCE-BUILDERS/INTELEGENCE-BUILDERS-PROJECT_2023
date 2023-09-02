@@ -66,7 +66,7 @@ def main():
         send_reminder(appointment_time)
 
 
-        print("=" * 30)
+        print("=" * 30)  
         time.sleep(5)  # Delay for 5 seconds before the next reading
 
 if __name__ == "__main__":
