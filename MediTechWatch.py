@@ -28,7 +28,7 @@ def send_reminder(appointment_time):
     current_time = datetime.now()
     time_until_appointment = appointment_time - current_time
     if time_until_appointment < timedelta(hours=1):
-        print("Reminder: You have an appointment with the doctor on the 15th!")
+        print("Reminder: You have an appointment with the doctor in an hour!!")
 
 def main():
 
