@@ -8,7 +8,7 @@ import cv2
 
 class CameraApp:
     def __init__(self):
-        self.face_recognized = True  # Initialize to False
+        self.face_recognized = True  # Initialize to True
 
     def run(self):
         threading.Thread(target=self.open_camera).start()
@@ -50,12 +50,13 @@ class CameraApp:
              cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
             cv2.imshow('Camera', frame)
-            
+
+            # Close the camera window
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         
         cap.release()
-        cv2.destroyAllWindows()  # Close the camera window
+        cv2.destroyAllWindows()  
 
         if self.face_recognized:  # Start the drone simulation if a face is recognized
             root = tk.Tk()
@@ -66,12 +67,12 @@ class DroneDeliverySimulation:
         self.root = root
         self.root.title("Medication Drone Delivery Simulation")
         
-        self.canvas = tk.Canvas(self.root, width=800, height=600, bg="black")
+        self.canvas = tk.Canvas(self.root, width=800, height=600, bg="grey")
         self.canvas.pack()
         
         self.locations = []
         self.create_locations()
-        self.camera_view = self.canvas.create_rectangle(0, 0, 800, 600, outline="white")
+        self.camera_view = self.canvas.create_rectangle(0, 0, 800, 600, outline="black")
 
         self.drone = None
         
