@@ -51,16 +51,16 @@ def main():
         
         # Check for high blood pressure
         if systolic_bp > 130:
-            print("High blood pressure detected. Requesting medication from the hospital.")
+            print("High blood pressure detected. Requesting medication from the hospital ASAP.")
         
         # Check for high heart rate
         max_heart_rate = 220 - 30  # Assuming age is 30
         if heart_rate > 0.65 * max_heart_rate:
-            print("High heart rate detected. Requesting medication from the hospital.")
+            print("High heart rate detected. Requesting medication from the hospital ASAP.")
         
         # Check for high glucose level
         if glucose_level > 100:
-            print("High glucose level detected. Requesting medication from the hospital.")
+            print("High glucose level detected. Requesting medication from the hospital ASAP.")
         
         # Send appointment reminder
         send_reminder(appointment_time)
