@@ -24,6 +24,7 @@ heart_rate_monitor = HeartRateMonitor()
 hypertension_monitor = HypertensionMonitor()
 sugar_diabetes_monitor = SugarDiabetesMonitor()
 
+#This class reminds patient of his/her appointment
 def send_reminder(appointment_time):
     current_time = datetime.now()
     time_until_appointment = appointment_time - current_time
