@@ -4,11 +4,13 @@ import random
 import threading
 import time
 import cv2 
+import numpy as np
 
 
 class CameraApp:
     def __init__(self):
         self.face_recognized = True  # Initialize to True
+        self.object_detected = True
 
     def run(self):
         threading.Thread(target=self.open_camera).start()
@@ -22,6 +24,10 @@ class CameraApp:
         
         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
         
+        # Load YOLO model
+        net = cv2.dnn.readNet('yolov3.weights', 'yolov3.cfg')
+        classes = open('coco.names').read().strip().split('\n')
+
         while True:
             ret, frame = cap.read()
             
@@ -37,11 +43,34 @@ class CameraApp:
             if len(faces) > 0:
                 message = "Face recognized, confirmed."
                 color = (0, 255, 0)  # Green color for text
+                self.face_recognized = True
 
             else:
-              message = "Face not recognized, retry."
-              color = (0, 0, 255)  # Red color for text
-                
+              # Detect objects using YOLO
+                blob = cv2.dnn.blobFromImage(frame, 1/255.0, (416, 416), swapRB=True, crop=False)
+                net.setInput(blob)
+                layer_names = net.getUnconnectedOutLayersNames()
+                detections = net.forward(layer_names)
+
+                # Check if any objects are detected
+                for detection in detections:
+                    for obj in detection:
+                        scores = obj[5:]
+                        class_id = np.argmax(scores)
+                        confidence = scores[class_id]
+
+
+                        if confidence > 0.5:
+                            message = f"Object detected: {classes[class_id]}"
+                            color = (0, 255, 0)  # Green color for text
+                            self.object_detected = True
+                            break
+                    if self.object_detected:
+                        break
+                else:
+                    message = "Face not recognized, retry." if not self.object_detected else "Object not recognized, retry."
+                    color = (0, 0, 255)  # Red color for text
+
              # Draw text message on the frame
             cv2.putText(frame, message, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
@@ -58,7 +87,7 @@ class CameraApp:
         cap.release()
         cv2.destroyAllWindows()  
 
-        if self.face_recognized:  # Start the drone simulation if a face is recognized
+        if self.face_recognized or self.object_detected:  # Start the drone simulation if a face or object is recognized
             root = tk.Tk()
             app = DroneDeliverySimulation(root)
 
